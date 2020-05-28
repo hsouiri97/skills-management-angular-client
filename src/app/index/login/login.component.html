@@ -1,0 +1,70 @@
+<div class="d-flex align-items-center auth login-container px-0">
+  <div class="row w-100 mx-0">
+    <div class="col-lg-4 mx-auto">
+      <div class="auth-form-light text-center py-5 px-4 px-sm-5">
+        <div class="brand-logo">
+          <img
+            src="assets/images/logo.svg"
+            alt="logo"
+            height="100px"
+            width="100px"
+          />
+        </div>
+        <h4>Hello! let's get started</h4>
+        <h6 class="font-weight-light">Connectez-vous pour continuer.</h6>
+        <form
+          class="pt-3"
+          (ngSubmit)="onSubmit()"
+          #lform="ngForm"
+          [formGroup]="loginForm"
+          novalidate
+        >
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              id="username"
+              placeholder="Nom d'utilisateur"
+              formControlName="username"
+            />
+            <div class="invalid-feedback d-block" *ngIf="formErrors.username">
+              {{ formErrors.username }}
+            </div>
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              class="form-control form-control-lg"
+              id="password"
+              placeholder="Mot de passe"
+              formControlName="password"
+            />
+            <div class="invalid-feedback d-block" *ngIf="formErrors.password">
+              {{ formErrors.password }}
+            </div>
+          </div>
+          <div class="">
+            <div class="alert alert-danger">
+              Nom d'utilsateur ou mot de passe incorrect.
+            </div>
+          </div>
+          <div class="mt-3">
+            <button
+              class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+              type="submit"
+              [disabled]="lform.invalid"
+            >
+              Valider
+            </button>
+          </div>
+
+          <!--<div class="my-2 d-flex justify-content-between align-items-center">
+            <a href="javascript:(void)" class="auth-link text-black"
+              >Forgot password?</a
+            >
+          </div>-->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
