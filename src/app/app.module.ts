@@ -11,14 +11,19 @@ import { AppComponent } from "./app.component";
 import { NavbarComponent } from "./shared/navbar/navbar.component";
 import { SidebarComponent } from "./shared/sidebar/sidebar.component";
 import { FooterComponent } from "./shared/footer/footer.component";
-import { DashboardComponent } from "./dashboard/dashboard.component";
+import { DashboardComponent } from "./home/dashboard/dashboard.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { TodoComponent } from "./apps/todo-list/todo/todo.component";
 import { SpinnerComponent } from "./shared/spinner/spinner.component";
 import { ContentAnimateDirective } from "./shared/directives/content-animate.directive";
 import { TodoListComponent } from "./apps/todo-list/todo-list.component";
 
 import { APIInterceptor } from "./services/api.interceptor";
+import { TokenInterceptor } from "./services/token.interceptor";
+
+import { AuthGuard } from "./guards/auth.guard";
+import { NotFoundComponent } from "./not-found/not-found.component";
 
 @NgModule({
   declarations: [
@@ -27,10 +32,11 @@ import { APIInterceptor } from "./services/api.interceptor";
     SidebarComponent,
     FooterComponent,
     DashboardComponent,
-    TodoListComponent,
     TodoComponent,
     SpinnerComponent,
     ContentAnimateDirective,
+    TodoListComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +54,12 @@ import { APIInterceptor } from "./services/api.interceptor";
       useClass: APIInterceptor,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
 })

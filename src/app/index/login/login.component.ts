@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-login",
@@ -11,12 +12,14 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   username: string;
   password: string;
+  errMsg: string;
 
   @ViewChild("lform", { static: false }) loginFormDirective;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   formErrors = {
@@ -89,9 +92,18 @@ export class LoginComponent implements OnInit {
     this.password = this.loginForm.value.password;
 
     this.authService.login(this.username, this.password).subscribe(
-      (res) => console.log(res),
-      (err) => {
-        console.log("here is error: ", err);
+      (res) => {
+        let token: string = res.headers.get("authorization");
+        this.authService.saveToken(token);
+        this.router.navigateByUrl("/home/dashboard");
+      },
+      (errMsg) => {
+        //console.clear();
+        if (errMsg.startsWith("403")) {
+          this.errMsg = "Nom d'utilsateur ou mot de passe incorrect.";
+        } else {
+          this.errMsg = <any>errMsg;
+        }
       }
     );
   }

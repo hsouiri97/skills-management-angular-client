@@ -44,8 +44,8 @@
             </div>
           </div>
           <div class="">
-            <div class="alert alert-danger">
-              Nom d'utilsateur ou mot de passe incorrect.
+            <div class="alert alert-danger" *ngIf="errMsg">
+              {{ errMsg }}
             </div>
           </div>
           <div class="mt-3">

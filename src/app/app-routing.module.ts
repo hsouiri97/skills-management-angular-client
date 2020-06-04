@@ -1,14 +1,26 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { DashboardComponent } from "./dashboard/dashboard.component";
+import { DashboardComponent } from "./home/dashboard/dashboard.component";
+import { AuthGuard } from "./guards/auth.guard";
+import { NotFoundComponent } from "./not-found/not-found.component";
 
 const routes: Routes = [
-  { path: "", redirectTo: "/dashboard", pathMatch: "full" },
-  { path: "dashboard", component: DashboardComponent },
+  { path: "", redirectTo: "home/dashboard", pathMatch: "full" },
+  {
+    path: "home/dashboard",
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: "index",
     loadChildren: () =>
       import("./index/index.module").then((m) => m.LoginModule),
+  },
+  {
+    path: "home/profile",
+    loadChildren: () =>
+      import("./home/profile/profile.module").then((m) => m.ProfileModule),
+    canActivate: [AuthGuard],
   },
   {
     path: "basic-ui",
@@ -56,6 +68,11 @@ const routes: Routes = [
       import("./error-pages/error-pages.module").then(
         (m) => m.ErrorPagesModule
       ),
+  },
+  {
+    path: "**",
+    redirectTo: "/error-pages/404",
+    pathMatch: "full",
   },
 ];
 
