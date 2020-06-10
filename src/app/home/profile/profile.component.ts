@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ProfileService } from "../../services/profile.service";
-import { UserProfile } from "../../shared/models/UserProfile";
+import { User } from "../../shared/models/User";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { error } from "protractor";
 
 @Component({
   selector: "app-profile",
@@ -10,8 +9,8 @@ import { error } from "protractor";
   styleUrls: ["./profile.component.scss"],
 })
 export class ProfileComponent implements OnInit {
-  userProfile: UserProfile;
-  userProfileCopy: UserProfile = new UserProfile();
+  user: User;
+  userCopy: User = new User();
   errMsg: string;
   profileForm: FormGroup;
 
@@ -58,23 +57,24 @@ export class ProfileComponent implements OnInit {
     },
     cin: {
       required: "Le CIN est obligatoire.",
-      maxlength: "Le CIN doit comporter 7 caractéres.",
-      minlength: "Le CIN doit comporter 7 caractéres.",
+      maxlength: "Le CIN doit comporter 6 caractéres.",
+      minlength: "Le CIN doit comporter 6 caractéres.",
     },
   };
 
   ngOnInit() {
     this.profileService.getProfile().subscribe(
-      (userProfile) => {
-        this.userProfile = userProfile;
-        this.userProfileCopy = { ...this.userProfile };
-        console.log(this.userProfileCopy);
+      (User) => {
+        this.user = User;
+        this.userCopy = { ...this.user };
+        console.log(this.userCopy);
         //this.createForm();
       },
-      (errMsg) => (this.errMsg = <any>errMsg)
+      (errMsg) => {
+        this.errMsg = <any>errMsg;
+        console.log(this.errMsg);
+      }
     );
-
-    //console.log(this.userProfile);
   }
 
   createForm(): void {
@@ -92,7 +92,7 @@ export class ProfileComponent implements OnInit {
       address: ["", [Validators.required, Validators.maxLength(250)]],
       cin: [
         "",
-        [Validators.required, Validators.minLength(7), Validators.maxLength(7)],
+        [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
       ],
       gender: "",
       username: "",
@@ -113,8 +113,6 @@ export class ProfileComponent implements OnInit {
 
   disableForm(): void {
     this.fieldsetDisabled = true;
-    //this.userProfileCopy = this.userProfile;
-    console.log("ha hwwa: ", this.userProfile);
 
     this.resetForm();
   }
@@ -131,7 +129,7 @@ export class ProfileComponent implements OnInit {
       cin,
       diploma,
       quote,
-    } = this.userProfile;
+    } = this.user;
     this.profileForm.reset({
       firstName,
       lastName,
@@ -169,9 +167,9 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.profileService.updateProfile(this.userProfileCopy).subscribe(
-      (userProfile) => {
-        this.userProfile = userProfile;
+    this.profileService.updateProfile(this.userCopy).subscribe(
+      (user) => {
+        this.user = user;
         this.disableForm();
       },
       (errMsg) => {

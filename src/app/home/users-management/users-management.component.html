@@ -1,0 +1,515 @@
+<div class="page-header">
+  <h3 class="page-title">
+    <span class="page-title-icon bg-gradient-primary text-white mr-2">
+      <i class="mdi mdi-account-multiple"></i>
+    </span>
+    Gestion des employés
+  </h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:;">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Gestion des employés
+      </li>
+    </ol>
+  </nav>
+</div>
+<div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Gérer les employés de l'entreprise</h4>
+        <p class="card-description">Liste des employés</p>
+        <div class="row">
+          <div class="col-md-5 col-sm-12 mr-auto">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Chercher un collaborateur par son nom"
+              #searchBox
+              (input)="searchKeywordChanged(searchBox.value)"
+            />
+          </div>
+          <div class="col-md-5 col-sm-12 ml-auto">
+            <button
+              type="button"
+              class="btn btn-gradient-info btn-lg btn-block"
+              (click)="openNewModal(collaboratorModal)"
+            >
+              Ajouter un nouveau collaborateur
+            </button>
+          </div>
+        </div>
+        <div class="row" *ngIf="addSuccess || updateSuccess || deleteSuccess">
+          <div
+            class="col-6 mx-auto mt-4 alert alert-fill-success text-center"
+            role="alert"
+          >
+            <h4>
+              <i class="mdi mdi-information-outline"></i>
+              {{ addSuccess ? "Collaborateur ajouté avec succès!" : "" }}
+              {{ updateSuccess ? "Collaborateur modifié avec succès!" : "" }}
+              {{ deleteSuccess ? "Collaborateur supprimé avec succès!" : "" }}
+            </h4>
+          </div>
+        </div>
+        <div class="table-responsive pt-3">
+          <table class="table table-bordered table-hover">
+            <thead class="font-weight-bold">
+              <tr class="table-primary">
+                <th>
+                  Collaborateur
+                </th>
+                <th>
+                  Numéro de mobile
+                </th>
+                <th>
+                  Diplôme
+                </th>
+                <th>
+                  Sexe
+                </th>
+                <th>
+                  Rôle
+                </th>
+                <th>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="users">
+              <tr *ngFor="let user of users">
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>
+                  {{ user.mobile }}
+                </td>
+                <td>
+                  {{ user.diploma }}
+                </td>
+                <td>
+                  <span
+                    class="badge badge-pill"
+                    [ngClass]="{
+                      'badge-primary': user.gender === 'male',
+                      'badge-danger': user.gender === 'female'
+                    }"
+                  >
+                    {{ user.gender === "male" ? "H" : "F" }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="text-lowercase badge badge-pill"
+                    [ngClass]="{
+                      'badge-primary': user.roles[0].roleName === 'CONSULTANT',
+                      'badge-success': user.roles[0].roleName === 'MANAGER',
+                      'badge-info': user.roles[0].roleName === 'ADMIN'
+                    }"
+                    >{{ user.roles[0].roleName }}</span
+                  >
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-inverse-primary btn-rounded btn-icon mr-2"
+                    (click)="openViewModal(collaboratorModal, user)"
+                  >
+                    <i class="mdi mdi-information-outline"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-inverse-info btn-rounded btn-icon mr-2"
+                    (click)="openEditModal(collaboratorModal, user)"
+                  >
+                    <i class="mdi mdi-pencil"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-inverse-danger btn-rounded btn-icon mr-2"
+                    (click)="openDeleteModal(deleteModal, user)"
+                  >
+                    <i class="mdi mdi-delete-forever"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template class="modal fade" #collaboratorModal let-modal>
+  <form
+    class="form-sample"
+    novalidate
+    [formGroup]="collaboratorForm"
+    #cform="ngForm"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="collaboratorModal">
+          {{
+            modalType === "new"
+              ? "Ajouter un nouveau collaborateur"
+              : "Modiler collaborateur"
+          }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <fieldset [disabled]="modalType === 'view'">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div
+                class="form-group"
+                [ngClass]="{ 'has-danger': formErrors.firstName }"
+              >
+                <label for="firstName">Prénom</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="firstName"
+                  [ngClass]="{ 'has-danger': formErrors.firstName }"
+                  formControlName="firstName"
+                  [(ngModel)]="userCopy.firstName"
+                />
+                <div
+                  class="invalid-feedback d-block"
+                  *ngIf="formErrors.firstName"
+                >
+                  {{ formErrors.firstName }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="form-group"
+                [ngClass]="{ 'has-danger': formErrors.lastName }"
+              >
+                <label for="lastName">Nom de famille</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="lastName"
+                  formControlName="lastName"
+                  [(ngModel)]="userCopy.lastName"
+                />
+                <div
+                  class="invalid-feedback d-block"
+                  *ngIf="formErrors.lastName"
+                >
+                  {{ formErrors.lastName }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Sexe</label>
+                <div class="col-sm-4">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input
+                        type="radio"
+                        class="form-check-input"
+                        id="maleRadio"
+                        value="male"
+                        formControlName="gender"
+                        [(ngModel)]="userCopy.gender"
+                      />
+                      Homme
+                      <i class="input-helper"></i>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-sm-5">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input
+                        type="radio"
+                        class="form-check-input"
+                        id="femaleRadio"
+                        value="female"
+                        formControlName="gender"
+                        [(ngModel)]="userCopy.gender"
+                      />
+                      Femme
+                      <i class="input-helper"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="username"
+                  formControlName="username"
+                  [(ngModel)]="userCopy.username"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div
+                class="form-group"
+                [ngClass]="{
+                  'has-danger': formErrors.email || emailAlreadyExists
+                }"
+              >
+                <label for="email">Email</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="email"
+                  [ngClass]="{ 'has-danger': formErrors.email }"
+                  formControlName="email"
+                  [(ngModel)]="userCopy.email"
+                  #email
+                  (input)="checkEmailValue(email.value)"
+                />
+                <div class="invalid-feedback d-block" *ngIf="formErrors.email">
+                  {{ formErrors.email }}
+                </div>
+                <div
+                  class="invalid-feedback d-block"
+                  *ngIf="emailAlreadyExists"
+                >
+                  Cette adresse e-mail est déjà utilisée!
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="form-group"
+                [ngClass]="{ 'has-danger': formErrors.mobile }"
+              >
+                <label for="mobile">Numéro de mobile</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="mobile"
+                  formControlName="mobile"
+                  [(ngModel)]="userCopy.mobile"
+                />
+                <div class="invalid-feedback d-block" *ngIf="formErrors.mobile">
+                  {{ formErrors.mobile }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="diploma">Diplôme</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="diploma"
+                  [ngClass]="{ 'has-danger': formErrors.diploma }"
+                  formControlName="diploma"
+                  [(ngModel)]="userCopy.diploma"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="form-group"
+                [ngClass]="{ 'has-danger': formErrors.cin }"
+              >
+                <label for="cin">CIN</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="cin"
+                  formControlName="cin"
+                  [(ngModel)]="userCopy.cin"
+                />
+                <div class="invalid-feedback d-block" *ngIf="formErrors.cin">
+                  {{ formErrors.cin }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group d-flex">
+                <label for="entryDate">Date d'entrée</label>
+                <input
+                  type="text"
+                  placeholder="yyyy-mm-dd"
+                  class="form-control form-control-lg"
+                  formControlName="entryDate"
+                  id="entryDate"
+                  [(ngModel)]="userCopy.entryDate"
+                  ngbDatepicker
+                  #ed="ngbDatepicker"
+                  readonly
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="ed.toggle()"
+                >
+                  <i class="mdi mdi-calendar"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      formControlName="manager"
+                      [(ngModel)]="userCopy.manager"
+                    />
+                    Le collaborateur a un rôle de MANAGER ?
+                    <i class="input-helper"></i>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group d-flex">
+                <label for="integrationDate">Date d'integration</label>
+                <input
+                  placeholder="yyyy-mm-dd"
+                  class="form-control form-control-lg"
+                  formControlName="integrationDate"
+                  id="integrationDate"
+                  [(ngModel)]="userCopy.integrationDate"
+                  ngbDatepicker
+                  #id="ngbDatepicker"
+                  readonly
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="id.toggle()"
+                >
+                  <i class="mdi mdi-calendar"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group d-flex">
+                <label for="departureDate">Date de départ</label>
+                <input
+                  placeholder="yyyy-mm-dd"
+                  class="form-control form-control-lg"
+                  formControlName="departureDate"
+                  id="departureDate"
+                  [(ngModel)]="userCopy.departureDate"
+                  ngbDatepicker
+                  #dd="ngbDatepicker"
+                  readonly
+                />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="dd.toggle()"
+                >
+                  <i class="mdi mdi-calendar"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="alert alert-fill-danger" *ngIf="errMsg">
+                {{ errMsg }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="modal-footer">
+        <button
+          type="submit"
+          class="btn btn-success"
+          (click)="addNewUser()"
+          *ngIf="modalType === 'new'"
+          [disabled]="cform.invalid"
+        >
+          Ajouter collaborateur
+        </button>
+        <button
+          type="submit"
+          class="btn btn-success"
+          (click)="updateUser()"
+          *ngIf="modalType === 'edit'"
+          [disabled]="collaboratorForm.invalid"
+        >
+          Modifier collaborateur
+        </button>
+        <button
+          type="button"
+          class="btn btn-light"
+          data-dismiss="modal"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template
+  #deleteModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="exampleModalLabel-3"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel-3">
+        Supprimer le collaborateur
+      </h5>
+      <button
+        type="button"
+        class="close"
+        (click)="modal.dismiss()"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>êtes-vous sûr de vouloir supprimer le collaborateur?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="deleteUser()">
+        Valider
+      </button>
+      <button type="button" class="btn btn-light" (click)="modal.close()">
+        Annuler
+      </button>
+    </div>
+  </div>
+</ng-template>

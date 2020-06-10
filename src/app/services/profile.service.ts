@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ProcessHttpMsgService } from "./process-http-msg.service";
 import { Observable } from "rxjs";
-import { UserProfile } from "../shared/models/UserProfile";
+import { User } from "../shared/models/User";
 import { catchError } from "rxjs/operators";
 
 @Injectable({
@@ -20,15 +20,15 @@ export class ProfileService {
     private processHttpMsgService: ProcessHttpMsgService
   ) {}
 
-  getProfile(): Observable<UserProfile> {
+  getProfile(): Observable<User> {
     return this.http
-      .get<UserProfile>("profile")
+      .get<User>("profile")
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  updateProfile(userProfile: UserProfile): Observable<UserProfile> {
+  updateProfile(User: User): Observable<User> {
     return this.http
-      .put<UserProfile>("profile", userProfile, this.httpOptions)
+      .put<User>("profile", User, this.httpOptions)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

@@ -1,28 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: 'app-modals',
-  templateUrl: './modals.component.html',
-  styleUrls: ['./modals.component.scss']
+  selector: "app-modals",
+  templateUrl: "./modals.component.html",
+  styleUrls: ["./modals.component.scss"],
 })
 export class ModalsComponent implements OnInit {
-
   constructor(private modalService: NgbModal) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  openModal(exampleModalContent) {
+    this.modalService.open(exampleModalContent, { size: "lg" });
   }
 
-  openModal( exampleModalContent ) {
-    this.modalService.open( exampleModalContent, { size : 'lg' } );
+  openMediumModal(mediumModalContent) {
+    this.modalService.open(mediumModalContent);
   }
 
-  openMediumModal( mediumModalContent ) {
-    this.modalService.open( mediumModalContent );
+  openSmallModal(smallModalContent) {
+    this.modalService.open(smallModalContent, { size: "sm" });
   }
-
-  openSmallModal( smallModalContent ) {
-    this.modalService.open( smallModalContent, { size : 'sm' } );
-  }
-
 }

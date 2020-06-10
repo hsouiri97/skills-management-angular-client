@@ -20,7 +20,15 @@ const routes: Routes = [
     path: "home/profile",
     loadChildren: () =>
       import("./home/profile/profile.module").then((m) => m.ProfileModule),
-    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: "home/users-management",
+    loadChildren: () =>
+      import("./home/users-management/users-management.module").then(
+        (m) => m.UsersManagementModule
+      ),
+    canLoad: [AuthGuard],
   },
   {
     path: "basic-ui",
