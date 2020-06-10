@@ -11,6 +11,7 @@ import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
 })
 export class UsersManagementComponent implements OnInit {
   users: User[];
+  filteredUsers: User[];
   errMsg: string;
   modalType: string;
   user: User;
@@ -75,6 +76,7 @@ export class UsersManagementComponent implements OnInit {
           user.integrationDate = this.formatDate(user.integrationDate);
           user.departureDate = this.formatDate(user.departureDate);
         });
+        this.filteredUsers = this.users;
         this.createForm();
       },
       (errMsg) => {
@@ -194,6 +196,7 @@ export class UsersManagementComponent implements OnInit {
         this.user.integrationDate = this.formatDate(this.user.integrationDate);
         this.user.departureDate = this.formatDate(this.user.departureDate);
         this.users.push(this.user);
+        this.filteredUsers = this.users;
         this.collaboratorForm.reset();
         this.errMsg = null;
         this.emailAlreadyExists = false;
@@ -239,6 +242,7 @@ export class UsersManagementComponent implements OnInit {
         this.userCopy = { ...this.user };
 
         this.users.push(this.userCopy);
+        this.filteredUsers = this.users;
         this.errMsg = null;
         this.emailAlreadyExists = false;
         this.modalRef.close();
@@ -277,6 +281,8 @@ export class UsersManagementComponent implements OnInit {
         if (index > -1) {
           this.users.splice(index, 1);
         }
+
+        this.filteredUsers = this.users;
 
         this.modalRef.close();
 
@@ -357,7 +363,16 @@ export class UsersManagementComponent implements OnInit {
   }
 
   searchKeywordChanged(term: string): void {
-    console.log(term);
+    this.filteredUsers = this.users.filter((user) => {
+      if (
+        user.firstName.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) !==
+          -1 ||
+        user.lastName.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) !==
+          -1
+      ) {
+        return user;
+      }
+    });
   }
 
   checkEmailValue(emailValue: string): void {
