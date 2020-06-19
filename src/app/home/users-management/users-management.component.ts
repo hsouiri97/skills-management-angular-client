@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { UsersManagementService } from "../../services/users-management.service";
 import { User } from "../../shared/models/User";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { FormGroup, FormBuilder, Validators, NgForm } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-users-management",
@@ -23,6 +23,9 @@ export class UsersManagementComponent implements OnInit {
   updateSuccess: boolean;
   deleteSuccess: boolean;
   searchKeyword: string;
+  notificationMessage: string;
+  @ViewChild("notificationModal", { static: false }) notificationModal;
+  @ViewChild("errorModal", { static: false }) errorModal;
 
   formErrors = {
     firstName: "",
@@ -129,6 +132,7 @@ export class UsersManagementComponent implements OnInit {
       lastName: ["", [Validators.required, Validators.maxLength(40)]],
       gender: "male",
       manager: null,
+      yearsOfExperience: 0,
       email: [
         "",
         [
@@ -202,10 +206,13 @@ export class UsersManagementComponent implements OnInit {
         this.emailAlreadyExists = false;
         this.modalRef.close();
 
-        this.addSuccess = true;
-
+        this.notificationMessage = "Collaborateur ajouté avec succès!";
+        this.modalRef = this.modalService.open(this.notificationModal, {
+          size: "sm",
+        });
         setTimeout(() => {
-          this.addSuccess = false;
+          this.modalRef.close();
+          this.notificationMessage = "";
         }, 5000);
       },
       (errMsg) => {
@@ -228,6 +235,8 @@ export class UsersManagementComponent implements OnInit {
 
     this.userCopy.address = this.user.address;
     this.userCopy.id = this.user.id;
+    console.log(this.userCopy);
+
     this.userManagementService.updateUser(this.userCopy).subscribe(
       (user) => {
         const index = this.users.indexOf(this.user);
@@ -247,10 +256,13 @@ export class UsersManagementComponent implements OnInit {
         this.emailAlreadyExists = false;
         this.modalRef.close();
 
-        this.updateSuccess = true;
-
+        this.notificationMessage = "Collaborateur modifié avec succès!";
+        this.modalRef = this.modalService.open(this.notificationModal, {
+          size: "sm",
+        });
         setTimeout(() => {
-          this.updateSuccess = false;
+          this.modalRef.close();
+          this.notificationMessage = "";
         }, 5000);
       },
       (errMsg) => {
@@ -286,14 +298,32 @@ export class UsersManagementComponent implements OnInit {
 
         this.modalRef.close();
 
-        this.deleteSuccess = true;
-
+        this.notificationMessage = "Collaborateur supprimé avec succès!";
+        this.modalRef = this.modalService.open(this.notificationModal, {
+          size: "sm",
+        });
         setTimeout(() => {
-          this.deleteSuccess = false;
+          this.modalRef.close();
+          this.notificationMessage = "";
         }, 5000);
       },
       (errMsg) => {
-        console.log("errMsg: ", errMsg);
+        this.errMsg = errMsg;
+
+        if (this.errMsg.startsWith("500")) {
+          this.modalRef.close();
+          this.errMsg =
+            "le collaborateur sélectionné ne peut pas être supprimée";
+          this.modalRef = this.modalService.open(this.errorModal, {
+            size: "sm",
+          });
+          setTimeout(() => {
+            this.modalRef.close();
+            this.errMsg = "";
+          }, 5000);
+        } else {
+          console.log(this.errMsg);
+        }
       }
     );
   }

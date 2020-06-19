@@ -33,14 +33,14 @@
           <div class="col-md-5 col-sm-12 ml-auto">
             <button
               type="button"
-              class="btn btn-gradient-info btn-lg btn-block"
+              class="btn btn-gradient-primary btn-lg btn-block"
               (click)="openNewModal(collaboratorModal)"
             >
               Ajouter un nouveau collaborateur
             </button>
           </div>
         </div>
-        <div class="row" *ngIf="addSuccess || updateSuccess || deleteSuccess">
+        <!--<div class="row" *ngIf="addSuccess || updateSuccess || deleteSuccess">
           <div
             class="col-6 mx-auto mt-4 alert alert-fill-success text-center"
             role="alert"
@@ -52,7 +52,7 @@
               {{ deleteSuccess ? "Collaborateur supprimé avec succès!" : "" }}
             </h4>
           </div>
-        </div>
+        </div>-->
         <div class="table-responsive pt-3">
           <table class="table table-bordered table-hover">
             <thead class="font-weight-bold">
@@ -375,7 +375,7 @@
                 </button>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="form-group">
                 <div class="form-check">
                   <label class="form-check-label">
@@ -389,6 +389,19 @@
                     <i class="input-helper"></i>
                   </label>
                 </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="experience">Années d'expérience</label>
+                <input
+                  type="number"
+                  id="experience"
+                  class="form-control form-control-lg"
+                  formControlName="yearsOfExperience"
+                  [(ngModel)]="userCopy.yearsOfExperience"
+                  placeholder="0"
+                />
               </div>
             </div>
           </div>
@@ -511,5 +524,45 @@
         Annuler
       </button>
     </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #notificationModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="exampleModalLabel-4"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-success" id="exampleModalLabel-4">
+        Super!
+      </h5>
+    </div>
+    <div class="modal-body">
+      <img src="assets/images/gifs/confirmation.gif" class="img-thumbnail" />
+      <h6 class="text-center text-success">{{ notificationMessage }}</h6>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</ng-template>
+
+<ng-template
+  #errorModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="errorModalLabel"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-danger" id="errorModalLabel">
+        Oops!
+      </h5>
+    </div>
+    <div class="modal-body">
+      <img src="assets/images/gifs/error.gif" class="img-thumbnail" />
+      <h6 class="text-center text-danger">{{ errMsg }}</h6>
+    </div>
+    <div class="modal-footer"></div>
   </div>
 </ng-template>

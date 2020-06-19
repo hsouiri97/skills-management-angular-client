@@ -1,0 +1,471 @@
+<div class="page-header">
+  <h3 class="page-title">
+    <span class="page-title-icon bg-gradient-primary text-white mr-2">
+      <i class="mdi mdi-wrench"></i>
+    </span>
+    Gestion des compétences
+  </h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:;">Accueil</a></li>
+      <li class="breadcrumb-item">
+        <a href="javascript:;">Matrices et Compétences</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Gestion des compétences
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Gérer les compétences et sous-compétences</h4>
+        <p class="card-description">Liste des compétences</p>
+        <div class="row">
+          <div class="col-md-5 col-sm-12 mr-auto">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Chercher une compétence par son nom"
+              #searchBox
+              (input)="searchKeywordChanged(searchBox.value)"
+            />
+          </div>
+          <div class="col-md-5 col-sm-12 ml-auto">
+            <button
+              type="button"
+              class="btn btn-gradient-primary btn-lg btn-block"
+              (click)="openNewModal(skillModal)"
+            >
+              Ajouter une nouvelle compétence
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive pt-3">
+          <table class="table table-bordered table-hover text-center">
+            <thead class="font-weight-bold">
+              <tr class="table-primary">
+                <th>Nom de la matrice</th>
+                <th>Nombre des sous-compétences</th>
+                <th>Actions</th>
+                <th>Compétences et matrices</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="filteredSkills">
+              <tr *ngFor="let skill of filteredSkills">
+                <td>{{ skill.name }}</td>
+                <td>{{ skill.underSkills.length }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-inverse-primary btn-rounded btn-icon mr-2"
+                    ngbTooltip="Voir la compétence"
+                    placement="bottom"
+                    (click)="openViewModal(viewSkillModal, skill)"
+                  >
+                    <i class="mdi mdi-information-outline"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-inverse-info btn-rounded btn-icon mr-2"
+                    ngbTooltip="Modifier la compétence"
+                    placement="bottom"
+                    (click)="openEditModal(skillModal, skill)"
+                  >
+                    <i class="mdi mdi-pencil"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-inverse-danger btn-rounded btn-icon mr-2"
+                    ngbTooltip="Supprimer la compétence"
+                    placement="bottom"
+                    (click)="openDeleteModal(deleteModal, skill)"
+                  >
+                    <i class="mdi mdi-delete-forever"></i>
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-info"
+                    (click)="openAddToMatrixModal(addToMatrixModal, skill)"
+                  >
+                    Ajouter / Retirer d'une matrice
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template class="modal fade" #viewSkillModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="collaboratorModal">
+        Information sur la compétence
+      </h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="row m-2">
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title text-center">
+              <h3>
+                <small class="text-muted">Nom: </small>{{ selectedSkill.name }}
+              </h3>
+            </div>
+            <hr />
+            <div class="skills-list" *ngIf="selectedSkill.underSkills">
+              <h4>Liste des sous-compétences</h4>
+              <hr />
+              <ul class="list-group">
+                <li
+                  *ngFor="let underSkill of selectedSkill.underSkills"
+                  class="list-group-item list-group-item-primary"
+                >
+                  {{ underSkill.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template class="modal fade" #skillModal let-modal>
+  <div class="modal-content">
+    <form
+      class="form-sample"
+      novalidate
+      [formGroup]="skillForm"
+      #mform="ngForm"
+    >
+      <div class="modal-header">
+        <h5 class="modal-title" id="matrixModal">
+          {{
+            modalType === "new"
+              ? "Ajouter une nouvelle compétence"
+              : "Modifier la compétence"
+          }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <div
+                  class="form-group"
+                  [ngClass]="{ 'has-danger': formErrors.skillName }"
+                >
+                  <label for="name">Nom de la compétence</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    id="name"
+                    [ngClass]="{ 'has-danger': formErrors.name }"
+                    formControlName="name"
+                    [(ngModel)]="selectedSkill.name"
+                  />
+                  <div class="invalid-feedback d-block" *ngIf="formErrors.name">
+                    {{ formErrors.name }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        formControlName="hasUnderSkills"
+                        [(ngModel)]="hasUnderSkills"
+                      />
+                      Cette compétence a une ou plusieurs sous-compétences?
+                      <i class="input-helper"></i>
+                    </label>
+                  </div>
+                </div>
+                <form
+                  novalidate
+                  #underSkillForm="ngForm"
+                  *ngIf="hasUnderSkills"
+                >
+                  <hr />
+                  <h6>liste des sous-compétences:</h6>
+                  <ol class="list-group">
+                    <li
+                      class="list-group-item list-group-item-success"
+                      *ngFor="let underSkill of selectedSkill.underSkills"
+                    >
+                      {{ underSkill.name }}
+                      <span
+                        class="float-right mr-2"
+                        ngbTooltip="supprimer sous-compétence"
+                        placement="right"
+                        (click)="removeUnderSkill(underSkill)"
+                        >X</span
+                      >
+                    </li>
+                  </ol>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <input
+                          type="text"
+                          name="name"
+                          class="form-control form-control-lg mt-2"
+                          placeholder="Veuillez saisir le nom de la sous-compétence"
+                          #name="ngModel"
+                          [(ngModel)]="underSkill.name"
+                          required
+                        />
+                        <div
+                          class="invalid-feedback d-block"
+                          *ngIf="name.invalid && name.dirty"
+                        >
+                          Le nom de la sous-compétence est obligatoire
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <button
+                        class="btn btn-info"
+                        [disabled]="underSkillForm.form.invalid"
+                        (click)="addUnderSkill(underSkillForm.value)"
+                      >
+                        Ajouter sous-compétence
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="submit"
+          class="btn btn-success"
+          (click)="addNewSkill()"
+          *ngIf="modalType === 'new'"
+          [disabled]="skillForm.invalid"
+        >
+          Ajouter compétence
+        </button>
+        <button
+          type="submit"
+          class="btn btn-success"
+          (click)="updateSkill()"
+          *ngIf="modalType === 'edit'"
+          [disabled]="skillForm.invalid"
+        >
+          Modifier compétence
+        </button>
+        <button
+          type="button"
+          class="btn btn-light"
+          data-dismiss="modal"
+          (click)="closeModal()"
+        >
+          Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template
+  #notificationModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="exampleModalLabel-4"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-success" id="exampleModalLabel-4">
+        <strong>Super!</strong>
+      </h5>
+    </div>
+    <div class="modal-body">
+      <img src="assets/images/gifs/confirmation.gif" class="img-thumbnail" />
+      <h6 class="text-center text-success">
+        <strong>{{ notificationMessage }}</strong>
+      </h6>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</ng-template>
+
+<ng-template
+  #errorModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="errorModalLabel"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-primary" id="errorModalLabel">
+        <strong>Oops!</strong>
+      </h5>
+    </div>
+    <div class="modal-body">
+      <img src="assets/images/gifs/error.gif" class="img-thumbnail" />
+      <h6 class="text-center text-dark">
+        <strong>{{ errMsg }}</strong>
+      </h6>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</ng-template>
+
+<ng-template
+  #deleteModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="exampleModalLabel-3"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel-3">
+        Supprimer la compétence
+      </h5>
+      <button
+        type="button"
+        class="close"
+        (click)="modal.dismiss()"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>êtes-vous sûr de vouloir supprimer la compétence?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="deleteSkill()">
+        Valider
+      </button>
+      <button type="button" class="btn btn-light" (click)="modal.close()">
+        Annuler
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template class="modal fade" #addToMatrixModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="collaboratorModal">
+        Affecter la compétence à une ou plusieurs matrices
+      </h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="row m-1">
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title text-center">
+              <h3>
+                <small class="text-muted">Nom: </small>{{ selectedSkill.name }}
+              </h3>
+            </div>
+            <div class="addSkillToMatrix">
+              <h4>Liste des matrices</h4>
+              <hr />
+              <div class="row">
+                <div class="col-12">
+                  <div class="mb-3" *ngIf="matricesOfSkillCopy">
+                    <ul class="list-group">
+                      <li
+                        *ngFor="let matrix of matricesOfSkillCopy"
+                        class="list-group-item list-group-item-success"
+                      >
+                        {{ matrix.title }}
+                        <span
+                          class="float-right mr-2"
+                          (click)="removeMatrix(matrix)"
+                          ngbTooltip="retirer la matrice"
+                          placement="right"
+                          >X</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <hr class="mt-2" />
+                  <label for="matricesSelect">Selectionner une matrice</label>
+                  <select
+                    multiple
+                    class="form-control"
+                    id="matricesSelect"
+                    *ngIf="eligibleMatrices"
+                  >
+                    <option
+                      *ngFor="let matrix of eligibleMatrices"
+                      (click)="selectMatrix(matrix)"
+                      >{{ matrix.title }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!--<div class="d-flex mt-2">-->
+      <button
+        type="button"
+        class="btn btn-success"
+        [hidden]="arraysEquals()"
+        (click)="addAndRemoveFromMatrices()"
+      >
+        Valider
+      </button>
+      <button type="button" class="btn btn-light" (click)="modal.close()">
+        Annuler
+      </button>
+    </div>
+  </div>
+</ng-template>

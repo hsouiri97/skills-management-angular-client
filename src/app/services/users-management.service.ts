@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { User } from "../shared/models/User";
 import { ProcessHttpMsgService } from "./process-http-msg.service";
-import { catchError } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -44,5 +44,19 @@ export class UsersManagementService {
         responseType: "text",
       })
       .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  searchUsers(term: string): Observable<User[]> {
+    if (!term.trim()) {
+      return of([]);
+    }
+    return this.http.get<User[]>(`users-management/search?term=${term}`).pipe(
+      /*tap((x) =>
+        x.length
+          ? console.log("found users matching term: ", term)
+          : console.log("no heroes matching term: ", term)
+      ),*/
+      catchError(this.processHttpMsgService.handleError)
+    );
   }
 }

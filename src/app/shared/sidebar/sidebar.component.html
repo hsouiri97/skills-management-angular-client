@@ -188,6 +188,47 @@
         </ul>
       </div>
     </li>
+    <li
+      class="nav-item"
+      [ngClass]="{ active: matrices.isActive || skills.isActive }"
+    >
+      <a
+        class="nav-link"
+        (click)="skillsAndMatricesCollapsed = !skillsAndMatricesCollapsed"
+        [attr.aria-expanded]="skillsAndMatricesCollapsed"
+        aria-controls="skills-and-matrices"
+      >
+        <span class="menu-title">Compétences</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-matrix menu-icon"></i>
+      </a>
+      <div
+        class="collapse"
+        id="skills-and-matrices"
+        [ngbCollapse]="!skillsAndMatricesCollapsed"
+      >
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              #matrices="routerLinkActive"
+              routerLink="home/skills-and-matrices/matrices"
+              routerLinkActive="active"
+              >Gestion des matrices</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              #skills="routerLinkActive"
+              routerLink="home/skills-and-matrices/skills"
+              routerLinkActive="active"
+              >Gestion des compétences</a
+            >
+          </li>
+        </ul>
+      </div>
+    </li>
     <li class="nav-item" [ngClass]="{ active: forms.isActive }">
       <a
         class="nav-link"

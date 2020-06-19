@@ -1,0 +1,18 @@
+<input
+  #userSearchBox
+  id="userSerachBox"
+  class="form-control form-control-lg"
+  type="text"
+  (input)="search(userSearchBox.value)"
+  placeholder="Veuillez saisir le nom du collaborateur"
+/>
+
+<ul class="search-result">
+  <li
+    *ngFor="let user of users$ | async"
+    class="form-control"
+    (click)="select(user)"
+  >
+    {{ user.firstName }} {{ user.lastName }}
+  </li>
+</ul>
