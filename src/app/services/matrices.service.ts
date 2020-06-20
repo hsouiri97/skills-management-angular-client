@@ -6,6 +6,7 @@ import { ProcessHttpMsgService } from "./process-http-msg.service";
 import { Matrix } from "../shared/models/Matrix";
 import { UserOfMatrix } from "../shared/models/UserOfMatrix";
 import { User } from "../shared/models/User";
+import { UserMatrix } from "../shared/models/UserMatrix";
 
 @Injectable({
   providedIn: "root",
@@ -69,6 +70,22 @@ export class MatricesService {
   getMatricesTitleOnly(): Observable<Matrix[]> {
     return this.http
       .get<Matrix[]>("skills-matrices/title-only")
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getMyMatrices(): Observable<UserMatrix[]> {
+    return this.http
+      .get<UserMatrix[]>("skills-matrices/my-matrices")
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  setRating(matrix: Matrix, rating: number): Observable<string> {
+    return this.http
+      .put(
+        `skills-matrices/${matrix.id}/set-rating/${rating}`,
+        {},
+        { responseType: "text" }
+      )
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

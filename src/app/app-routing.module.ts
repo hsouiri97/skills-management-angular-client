@@ -39,6 +39,14 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
+    path: "home/my-matrices",
+    loadChildren: () =>
+      import("./home/my-matrices/my-matrices.module").then(
+        (m) => m.MyMatricesModule
+      ),
+    canLoad: [AuthGuard],
+  },
+  {
     path: "basic-ui",
     loadChildren: () =>
       import("./basic-ui/basic-ui.module").then((m) => m.BasicUiModule),

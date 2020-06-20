@@ -47,6 +47,17 @@
         <i class="mdi mdi-account-multiple menu-icon"></i>
       </a>
     </li>
+    <li class="nav-item" [ngClass]="{ active: myMatrices.isActive }">
+      <a
+        class="nav-link"
+        routerLink="/home/my-matrices"
+        routerLinkActive
+        #myMatrices="routerLinkActive"
+      >
+        <span class="menu-title">Matrices</span>
+        <i class="mdi mdi-matrix menu-icon"></i>
+      </a>
+    </li>
     <li
       class="nav-item"
       [ngClass]="{

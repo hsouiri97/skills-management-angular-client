@@ -184,7 +184,7 @@ export class MatricesComponent implements OnInit {
         setTimeout(() => {
           this.modalRef.close();
           this.notificationMessage = "";
-        }, 5000);
+        }, 2000);
       },
       (errMsg) => {
         this.errMsg = errMsg;

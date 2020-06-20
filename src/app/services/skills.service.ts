@@ -70,4 +70,14 @@ export class SkillsService {
       })
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  addRating(skill: Skill, rating: number): Observable<string> {
+    return this.http
+      .put(
+        `skills/${skill.id}/add-rating/${rating}`,
+        {},
+        { responseType: "text" }
+      )
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

@@ -1,0 +1,266 @@
+<div class="page-header">
+  <h3 class="page-title">
+    <span class="page-title-icon bg-gradient-primary text-white mr-2">
+      <i class="mdi mdi-matrix"></i>
+    </span>
+    Mes matrices
+  </h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:;">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Mes matrices
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Remplir les matrices</h4>
+        <p class="card-description">Liste des matrices</p>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mr-auto">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Chercher une matrice par son titre"
+              #searchBox
+              (input)="searchKeywordChanged(searchBox.value)"
+            />
+          </div>
+        </div>
+
+        <div class="table-responsive pt-3">
+          <table class="table table-bordered table-hover text-center">
+            <thead class="font-weight-bold">
+              <tr class="table-primary">
+                <th>Titre de la matrice</th>
+                <th>Nombre des compétences</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="myFilteredMatrices">
+              <tr
+                *ngFor="let myMatrix of myFilteredMatrices"
+                [ngClass]="{ 'bg-secondary': myMatrix.averageRating }"
+                [ngbTooltip]="
+                  myMatrix.averageRating
+                    ? 'vous avez déjà rempli cette matrice'
+                    : ''
+                "
+              >
+                <td>{{ myMatrix.skillsMatrix.title }}</td>
+                <td>{{ myMatrix.skillsMatrix.skills.length }}</td>
+                <td>
+                  <button
+                    class="btn btn-primary"
+                    (click)="openFillMatrixModal(fillMatrixModal, myMatrix)"
+                    [disabled]="myMatrix.averageRating"
+                  >
+                    Remplir la matrice
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template class="modal fade" #fillMatrixModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="collaboratorModal">
+        Remplir la matrice
+      </h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form #ratingsForm="ngForm" novalidate>
+      <div class="row mx-2 mt-1 mb-0">
+        <div class="col-lg-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title text-center">
+                <h1>
+                  <small class="text-muted">Intitulé: </small
+                  >{{ selectedMyMatrix.skillsMatrix.title }}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-2 mt-0">
+        <div class="col-lg-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Listes des compétences</h4>
+              <p class="card-description">
+                Veuillez saisir le niveau de chaque compétence, si la compétence
+                contient des sous-compétences vous saisissez le niveau de
+                chacune et la moyenne de la compétence sera calculée
+                automatiquement par le système.<br />
+                <span class="text-primary"
+                  ><strong>NB: </strong>Chaque niveau doit être compris entre 0
+                  et 5.</span
+                >
+              </p>
+
+              <div *ngIf="selectedMyMatrix.skillsMatrix.skills">
+                <div *ngFor="let skill of selectedMyMatrix.skillsMatrix.skills">
+                  <h4>{{ skill.name }}</h4>
+                  <div
+                    class="form-group row"
+                    *ngIf="skill.underSkills.length === 0"
+                  >
+                    <label class="col-sm-3 col-form-label"
+                      >Niveau de la compétence</label
+                    >
+                    <div class="col-sm-3">
+                      <input
+                        type="text"
+                        placeholder="Votre niveau sera affiché ici"
+                        class="form-control form-control-lg"
+                        #skillRatingRes
+                        disabled
+                      />
+                    </div>
+                    <div class="col-sm-6">
+                      <input
+                        type="range"
+                        min="0"
+                        max="5"
+                        value="0"
+                        class="custom-range pt-4"
+                        [name]="'noUS_' + skill.id"
+                        ngModel
+                        #skillRatingRange
+                        (change)="skillRatingRes.value = skillRatingRange.value"
+                        required
+                      />
+                      <!--</div>-->
+                    </div>
+                  </div>
+
+                  <div *ngIf="skill.underSkills.length > 0">
+                    <h6>Liste des sous-compétences</h6>
+                    <div
+                      *ngFor="let underSkill of skill.underSkills"
+                      class="form-group row"
+                    >
+                      <label class="col-sm-3 col-form-label">{{
+                        underSkill.name
+                      }}</label>
+                      <div class="col-sm-3">
+                        <input
+                          type="text"
+                          placeholder="Votre niveau sera affiché ici"
+                          class="form-control form-control-lg"
+                          #ratingRes
+                          disabled
+                        />
+                      </div>
+                      <div class="col-sm-6">
+                        <input
+                          type="range"
+                          min="0"
+                          max="5"
+                          value="0"
+                          class="custom-range pt-4"
+                          ngModel
+                          [name]="skill.id + '_' + underSkill.id"
+                          #ratingRange
+                          (change)="ratingRes.value = ratingRange.value"
+                          required
+                        />
+                        <!--</div>-->
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="submit"
+          class="btn btn-success"
+          (click)="logForm(ratingsForm)"
+        >
+          <!--[hidden]="ratingsForm.form.invalid"-->
+          Valider
+        </button>
+        <button
+          type="button"
+          class="btn btn-light"
+          data-dismiss="modal"
+          (click)="(modal.close)"
+        >
+          Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+  {{ ratingsForm.form.value | json }}
+  {{ ratingsForm.form.valid | json }}
+</ng-template>
+
+<ng-template
+  #notificationModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="exampleModalLabel-4"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-success" id="exampleModalLabel-4">
+        <strong>Super!</strong>
+      </h5>
+    </div>
+    <div class="modal-body">
+      <img src="assets/images/gifs/confirmation.gif" class="img-thumbnail" />
+      <h6 class="text-center text-success">
+        <strong>{{ notificationMessage }}</strong>
+      </h6>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</ng-template>
+
+<ng-template
+  #errorModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="errorModalLabel"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-primary" id="errorModalLabel">
+        <strong>Oops!</strong>
+      </h5>
+    </div>
+    <div class="modal-body">
+      <img src="assets/images/gifs/error.gif" class="img-thumbnail" />
+      <h6 class="text-center text-dark">
+        <strong>{{ errMsg }}</strong>
+      </h6>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</ng-template>
