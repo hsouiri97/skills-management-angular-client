@@ -32,6 +32,8 @@ export class MyMatricesComponent implements OnInit {
     this.matricesService.getMyMatrices().subscribe(
       (myMatrices) => {
         this.myMatrices = myMatrices;
+        console.log(myMatrices);
+
         this.myFilteredMatrices = this.myMatrices;
       },
       (errMsg) => {

@@ -1,0 +1,215 @@
+<div class="page-header">
+  <h3 class="page-title">
+    <span class="page-title-icon bg-gradient-primary text-white mr-2">
+      <i class="mdi mdi-gavel"></i>
+    </span>
+    Résultats
+  </h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:;">Accueil</a></li>
+      <li class="breadcrumb-item">
+        <a href="javascript:;">Matrices et Compétences</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Résultats
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Remplir les matrices</h4>
+        <p class="card-description">Liste des matrices</p>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mr-auto">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Chercher une matrice par son titre"
+              #searchBox
+              (input)="searchKeywordChanged(searchBox.value)"
+            />
+          </div>
+        </div>
+
+        <div class="pt-3">
+          <table class="table table-bordered table-hover text-center">
+            <thead class="font-weight-bold">
+              <tr class="table-primary">
+                <th>Titre de la matrice</th>
+                <th>Nombre des sous-compétences</th>
+                <th>Résultats</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="filteredMatrices">
+              <tr *ngFor="let matrix of filteredMatrices">
+                <td>{{ matrix.title }}</td>
+                <td>
+                  <div class="btn-group dropdown">
+                    <button type="button" class="btn btn-info">
+                      Nombre des compétences:
+                      {{ matrix.skills.length }}
+                    </button>
+                    <div class="btn-group" ngbDropdown>
+                      <button
+                        type="button"
+                        class="btn btn-info dropdown-toggle dropdown-toggle-split"
+                        id="skillsDropdownMenu"
+                        ngbDropdownToggle
+                      >
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <div ngbDropdownMenu aria-labelledby="skillsDropdownMenu">
+                        <h6 class="dropdown-header">
+                          Liste des compétences
+                        </h6>
+                        <div *ngFor="let skill of matrix.skills">
+                          <a class="dropdown-item">{{ skill.name }}</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <button
+                    class="btn btn-primary"
+                    (click)="openResultsModal(resultsModal, matrix)"
+                  >
+                    Voir les résultats
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template class="modal fade" #resultsModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="collaboratorModal">
+        Liste des collaborateurs concernés par la matrice
+      </h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="row m-2">
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title text-center">
+              <h1>
+                <small class="text-muted">Intitulé: </small
+                >{{ selectedMatrix.title }}
+              </h1>
+            </div>
+            <div class="collaborators-list">
+              <h3>
+                Résultats des {{ usersOfMatrix.length }} collaborateurs
+                concernés par cette matrice:
+              </h3>
+              <hr />
+              <div class="row">
+                <div class="col-md-6 col-sm-12 mr-auto">
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    placeholder="Chercher par le nom du collaborateur ou par la moyenne"
+                    #searchBox2
+                    (input)="searchKeywordChanged2(searchBox2.value)"
+                  />
+                </div>
+              </div>
+              <div class="table-responsive pt-3">
+                <table class="table table-bordered table-hover text-center">
+                  <thead class="font-weight-bold">
+                    <tr class="table-primary">
+                      <th>Collaborateur</th>
+                      <th>Email</th>
+                      <th>Numéro de téléphone</th>
+                      <th>Moyenne</th>
+                      <th>Niveau</th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="usersOfMatrix">
+                    <tr *ngFor="let user of filteredUsersOfMatrix">
+                      <td>{{ user.userFirstName }} {{ user.userLastName }}</td>
+                      <td>{{ user.userEmail }}</td>
+                      <td>{{ user.userMobile }}</td>
+                      <td>
+                        <span
+                          class="badge badge-pill"
+                          [ngClass]="{
+                            'badge-success': getUserRating(user) >= 4,
+                            'badge-primary':
+                              getUserRating(user) >= 3 &&
+                              getUserRating(user) < 4,
+                            'badge-info':
+                              getUserRating(user) >= 2 &&
+                              getUserRating(user) < 3,
+                            'badge-danger': getUserRating(user) < 2
+                          }"
+                        >
+                          {{
+                            getUserRating(user)
+                              ? getUserRating(user)
+                              : "Non défini"
+                          }}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          class="badge badge-pill"
+                          [ngClass]="{
+                            'badge-success': getUserRating(user) >= 4,
+                            'badge-primary':
+                              getUserRating(user) >= 3 &&
+                              getUserRating(user) < 4,
+                            'badge-info':
+                              getUserRating(user) >= 2 &&
+                              getUserRating(user) < 3,
+                            'badge-danger': getUserRating(user) < 2
+                          }"
+                        >
+                          {{
+                            getUserRating(user) > 4
+                              ? "Excellent"
+                              : getUserRating(user) <= 4 &&
+                                getUserRating(user) > 3
+                              ? "Bon"
+                              : getUserRating(user) <= 3 &&
+                                getUserRating(user) > 2
+                              ? "Moyen"
+                              : getUserRating(user) < 2 &&
+                                getUserRating(user) !== null
+                              ? "Critique"
+                              : "Non défini"
+                          }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

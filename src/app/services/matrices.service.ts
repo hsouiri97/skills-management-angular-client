@@ -88,4 +88,10 @@ export class MatricesService {
       )
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  getMatrixUserList(): Observable<UserMatrix[]> {
+    return this.http
+      .get<UserMatrix[]>("skills-matrices/users-and-ratings")
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }
