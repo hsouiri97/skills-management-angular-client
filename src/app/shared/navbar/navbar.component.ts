@@ -12,6 +12,7 @@ import { Router } from "@angular/router";
 export class NavbarComponent implements OnInit {
   public iconOnlyToggled = false;
   public sidebarToggled = false;
+  username: string;
 
   constructor(
     config: NgbDropdownConfig,
@@ -21,7 +22,9 @@ export class NavbarComponent implements OnInit {
     config.placement = "bottom-right";
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.username = this.auth.getUsername();
+  }
 
   // toggle sidebar in small devices
   toggleOffcanvas() {

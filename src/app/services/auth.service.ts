@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { ProcessHttpMsgService } from "./process-http-msg.service";
 import { catchError } from "rxjs/operators";
+import { decode } from "punycode";
 
 @Injectable({
   providedIn: "root",
@@ -44,6 +45,34 @@ export class AuthService {
       return !this.helper.isTokenExpired(this.token);
     }
     return false;
+  }
+
+  isAdmin(): boolean {
+    this.loadToken();
+    let admin: boolean = false;
+    if (this.token) {
+      const decodedToken = this.helper.decodeToken(this.token);
+      if (decodedToken.authorities) {
+        decodedToken.authorities.forEach((a) => {
+          if (a.authority === "ROLE_ADMIN") {
+            admin = true;
+          }
+        });
+      }
+    }
+    return admin;
+  }
+
+  getUsername(): string {
+    this.loadToken();
+    if (this.token) {
+      const decodedToken = this.helper.decodeToken(this.token);
+      if (decodedToken.sub) {
+        return decodedToken.sub;
+      }
+      return "";
+    }
+    return "";
   }
 
   logout(): void {

@@ -2,14 +2,15 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { DashboardComponent } from "./home/dashboard/dashboard.component";
 import { AuthGuard } from "./guards/auth.guard";
+import { AdminGuard } from "./guards/admin.guard";
 import { NotFoundComponent } from "./not-found/not-found.component";
 
 const routes: Routes = [
-  { path: "", redirectTo: "home/dashboard", pathMatch: "full" },
+  { path: "", redirectTo: "home/profile", pathMatch: "full" },
   {
     path: "home/dashboard",
     component: DashboardComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: "index",
@@ -21,6 +22,7 @@ const routes: Routes = [
     loadChildren: () =>
       import("./home/profile/profile.module").then((m) => m.ProfileModule),
     canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: "home/users-management",
@@ -28,7 +30,8 @@ const routes: Routes = [
       import("./home/users-management/users-management.module").then(
         (m) => m.UsersManagementModule
       ),
-    canLoad: [AuthGuard],
+    canLoad: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: "home/skills-and-matrices",
@@ -36,7 +39,8 @@ const routes: Routes = [
       import("./home/skills-and-matrices/skills-and-matrices.module").then(
         (m) => m.SkillsAndMatricesModule
       ),
-    canLoad: [AuthGuard],
+    canLoad: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: "home/my-matrices",
@@ -45,6 +49,32 @@ const routes: Routes = [
         (m) => m.MyMatricesModule
       ),
     canLoad: [AuthGuard],
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "home/positions",
+    loadChildren: () =>
+      import("./home/positions/positions.module").then(
+        (m) => m.PositionsModule
+      ),
+    canLoad: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
+  },
+  {
+    path: "home/projects",
+    loadChildren: () =>
+      import("./home/projects/projects.module").then((m) => m.ProjectsModule),
+    canLoad: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
+  },
+  {
+    path: "home/departments",
+    loadChildren: () =>
+      import("./home/departments/departments.module").then(
+        (m) => m.DepartmentsModule
+      ),
+    canLoad: [AuthGuard, AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: "basic-ui",

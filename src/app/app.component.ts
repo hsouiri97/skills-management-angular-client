@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
           this.cleanThePage();
           if (
             event["url"] == "/error-pages/404" ||
+            event["url"] == "/error-pages/403" ||
             event["url"] == "/error-pages/500"
           ) {
             document.querySelector(".content-wrapper").classList.add("p-0");

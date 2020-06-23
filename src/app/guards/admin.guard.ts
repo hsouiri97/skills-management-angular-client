@@ -1,27 +1,22 @@
 import { Injectable } from "@angular/core";
 import {
   CanActivate,
+  CanLoad,
+  Route,
+  UrlSegment,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
-  CanLoad,
 } from "@angular/router";
 import { Observable } from "rxjs";
 import { AuthService } from "../services/auth.service";
-import { Router, Route, UrlSegment } from "@angular/router";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
 })
-export class AuthGuard implements CanActivate, CanLoad {
+export class AdminGuard implements CanActivate, CanLoad {
   constructor(private auth: AuthService, private router: Router) {}
-
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]
-  ): boolean | Observable<boolean> | Promise<boolean> {
-    return this.isAuthenticated();
-  }
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -31,12 +26,23 @@ export class AuthGuard implements CanActivate, CanLoad {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.isAuthenticated();
+    return this.isAdmin();
+  }
+  canLoad(
+    route: Route,
+    segments: UrlSegment[]
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.isAdmin();
   }
 
-  isAuthenticated(): boolean {
+  private isAdmin() {
     if (this.auth.isLoggedIn()) {
-      return true;
+      if (this.auth.isAdmin()) {
+        return true;
+      } else {
+        this.router.navigateByUrl("/error-pages/403");
+        return false;
+      }
     } else {
       this.router.navigateByUrl("/index/login");
       return false;

@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-sidebar",
@@ -9,8 +11,10 @@ export class SidebarComponent implements OnInit {
   public uiBasicCollapsed = false;
   public samplePagesCollapsed = false;
   public skillsAndMatricesCollapsed = false;
+  username: string;
+  isAdmin: boolean;
 
-  constructor() {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
     const body = document.querySelector("body");
@@ -28,5 +32,12 @@ export class SidebarComponent implements OnInit {
         }
       });
     });
+    this.username = this.auth.getUsername();
+    this.isAdmin = this.auth.isAdmin();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigateByUrl("/index/login");
   }
 }

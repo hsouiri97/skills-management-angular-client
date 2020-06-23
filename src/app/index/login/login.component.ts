@@ -95,7 +95,7 @@ export class LoginComponent implements OnInit {
       (res) => {
         let token: string = res.headers.get("authorization");
         this.authService.saveToken(token);
-        this.router.navigateByUrl("/home/dashboard");
+        this.router.navigateByUrl("/home/profile");
       },
       (errMsg) => {
         //console.clear();

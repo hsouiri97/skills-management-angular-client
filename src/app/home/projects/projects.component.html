@@ -1,0 +1,407 @@
+<div class="page-header">
+  <h3 class="page-title">
+    <span class="page-title-icon bg-gradient-primary text-white mr-2">
+      <i class="mdi mdi-map-marker-outline"></i>
+    </span>
+    Gestion des Projets
+  </h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:;">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Gestion des Projets
+      </li>
+    </ol>
+  </nav>
+</div>
+
+<div class="row">
+  <div class="col-12 grid-margin">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Gérer les projets de l'entreprise</h4>
+        <p class="card-description">Liste des projets</p>
+        <div class="row">
+          <div class="col-md-5 col-sm-12 mr-auto">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Chercher un projet par son nom"
+              #searchBox
+              (input)="searchKeywordChanged(searchBox.value)"
+            />
+          </div>
+          <div class="col-md-5 col-sm-12 ml-auto">
+            <button
+              type="button"
+              class="btn btn-gradient-primary btn-lg btn-block"
+              (click)="openAddModal(addModal)"
+            >
+              Ajouter un nouveau projet
+            </button>
+          </div>
+        </div>
+        <div class="table-responsive pt-3">
+          <table class="table table-bordered table-hover">
+            <thead class="font-weight-bold">
+              <tr class="table-primary text-center">
+                <th><b>Titre</b></th>
+                <th><b>Date Début</b></th>
+                <th><b>Date Fin</b></th>
+                <th><b>Actions</b></th>
+              </tr>
+            </thead>
+            <tbody *ngIf="filteredProjects">
+              <tr class="text-center" *ngFor="let p of filteredProjects">
+                <td>{{ p.title }}</td>
+                <td>{{ p.startDate }}</td>
+                <td>{{ p.expectedEndDate }}</td>
+                <td class="justify-content-between">
+                  <div class="justify-content-between">
+                    <button
+                      type="button"
+                      class="btn btn-outline-success btn-rounded btn-icon"
+                      (click)="openUpdateModal(editModal, p)"
+                    >
+                      <i class="mdi mdi-pencil"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-rounded btn-icon"
+                      (click)="openRemoveModal(deleteModal, p)"
+                    >
+                      <i class="mdi mdi-delete-forever"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div>
+            <ngb-pagination
+              [collectionSize]="40"
+              [pageSize]="10"
+              [page]="1"
+              aria-label="Default pagination"
+              class="d-flex justify-content-center pagination-primary"
+            ></ngb-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template
+  #addModal
+  let-modal
+  class="modal fade"
+  id="exampleModal-2"
+  aria-labelledby="exampleModalLabel-2"
+>
+  <div class="modal-content">
+    <div class="card">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel-2">
+          Ajouter Nouveau Projet
+        </h5>
+        <button
+          type="button"
+          class="close"
+          (click)="modal.dismiss()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <form
+          #addForm="ngForm"
+          novalidate
+          [formGroup]="projectForm"
+          class="form-sample"
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label card-description"
+                  >Titre</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    [ngClass]="{ 'has-danger': formErrors.title }"
+                    formControlName="title"
+                    [(ngModel)]="projectCopy.title"
+                    type="text"
+                    class="form-control"
+                  />
+                  <div
+                    class="invalid-feedback d-block"
+                    *ngIf="formErrors.title"
+                  >
+                    {{ formErrors.title }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group row">
+                <label
+                  class="col-sm-3 col-form-label card-description"
+                  for="startDate"
+                  >Date Début</label
+                >
+                <div class="input-group col-sm-9">
+                  <input
+                    ngbDatepicker
+                    #dd="ngbDatepicker"
+                    id="startDate"
+                    [(ngModel)]="projectCopy.startDate"
+                    formControlName="startDate"
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    readonly
+                    style="background-color: white;"
+                    (click)="dd.toggle()"
+                  />
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text mdi mdi-calendar h-50 d-inline-block"
+                      (click)="dd.toggle()"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label card-description"
+                  >Date Fin</label
+                >
+                <div class="input-group col-sm-9">
+                  <input
+                    ngbDatepicker
+                    #df="ngbDatepicker"
+                    id="expectedEndDate"
+                    [(ngModel)]="projectCopy.expectedEndDate"
+                    formControlName="expectedEndDate"
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    readonly
+                    style="background-color: white;"
+                    (click)="df.toggle()"
+                  />
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text mdi mdi-calendar h-50 d-inline-block"
+                      (click)="df.toggle()"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="addForm.invalid"
+          (click)="addProject(); modal.close()"
+        >
+          Ajouter
+        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close()">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #editModal
+  let-modal
+  class="modal fade"
+  id="exampleModal-2"
+  aria-labelledby="exampleModalLabel-2"
+>
+  <div class="modal-content">
+    <div class="card">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel-2">Modifier Projet</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="modal.dismiss()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <form
+          #updateForm="ngForm"
+          novalidate
+          [formGroup]="projectForm"
+          class="form-sample"
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label card-description"
+                  >Titre</label
+                >
+                <div class="col-sm-9">
+                  <input
+                    [ngClass]="{ 'has-danger': formErrors.title }"
+                    formControlName="title"
+                    [(ngModel)]="projectCopy.title"
+                    type="text"
+                    class="form-control"
+                  />
+                  <div
+                    class="invalid-feedback d-block"
+                    *ngIf="formErrors.title"
+                  >
+                    {{ formErrors.title }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group row">
+                <label
+                  class="col-sm-3 col-form-label card-description"
+                  for="startDate"
+                  >Date Début</label
+                >
+                <div class="input-group col-sm-9">
+                  <input
+                    formControlName="startDate"
+                    [(ngModel)]="projectCopy.startDate"
+                    type="text"
+                    class="form-control"
+                    ngbDatepicker
+                    #dd="ngbDatepicker"
+                    placeholder="yyyy-mm-dd"
+                    readonly
+                    style="background-color: white;"
+                    (click)="dd.toggle()"
+                  />
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text mdi mdi-calendar h-50 d-inline-block"
+                      (click)="dd.toggle()"
+                    ></span>
+                  </div>
+                  <div
+                    class="invalid-feedback d-block"
+                    *ngIf="formErrors.startDate"
+                  >
+                    {{ formErrors.startDate}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label card-description"
+                  >Date Fin</label
+                >
+                <div class="input-group col-sm-9">
+                  <input
+                    ngbDatepicker
+                    #df="ngbDatepicker"
+                    id="expectedEndDate"
+                    [(ngModel)]="projectCopy.expectedEndDate"
+                    formControlName="expectedEndDate"
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    readonly
+                    style="background-color: white;"
+                    (click)="df.toggle()"
+                  />
+                  <div class="input-group-prepend">
+                    <span
+                      class="input-group-text mdi mdi-calendar h-50 d-inline-block"
+                      (click)="df.toggle()"
+                    ></span>
+                  </div>
+                  <div
+                    class="invalid-feedback d-block"
+                    *ngIf="formErrors.expectedEndDate"
+                  >
+                    {{ formErrors.expectedEndDate}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="updateForm.invalid"
+          (click)="updateProject(projectCopy); modal.close()"
+        >
+          Valider
+        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close()">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #deleteModal
+  let-modal
+  class="modal fade"
+  aria-labelledby="exampleModalLabel-3"
+>
+  <div class="modal-content">
+    <div class="card">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel-3">Supprimer Projet</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="modal.dismiss()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <p>Etes-vous sûr de vouloir supprimer ce Projet ?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="deleteProject(project); modal.close()"
+        >
+          Oui
+        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close()">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
