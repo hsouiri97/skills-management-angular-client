@@ -76,6 +76,24 @@
           );
         }
       }
+      &:nth-child(4) {
+        .legend-dots {
+          background: linear-gradient(
+            to right,
+            rgba(54, 215, 232, 1),
+            rgba(177, 148, 250, 1)
+          );
+        }
+      }
+      &:nth-child(5) {
+        .legend-dots {
+          background: linear-gradient(
+            to right,
+            rgba(54, 215, 232, 1),
+            rgba(177, 148, 250, 1)
+          );
+        }
+      }
     }
   }
 }
@@ -107,6 +125,24 @@
             to right,
             rgba(255, 191, 150, 1),
             rgba(254, 112, 150, 1)
+          );
+        }
+      }
+      &:nth-child(4) {
+        .legend-dots {
+          background: linear-gradient(
+            to right,
+            rgba(6, 32, 247, 234),
+            rgba(20, 137, 241, 208)
+          );
+        }
+      }
+      &:nth-child(5) {
+        .legend-dots {
+          background: linear-gradient(
+            to right,
+            rgba(240, 247, 6, 62),
+            rgba(247, 185, 6, 46)
           );
         }
       }

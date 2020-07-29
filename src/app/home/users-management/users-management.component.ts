@@ -59,8 +59,8 @@ export class UsersManagementComponent implements OnInit {
     },
     cin: {
       required: "Le CIN est obligatoire.",
-      maxlength: "Le CIN doit comporter 6 caractéres.",
-      minlength: "Le CIN doit comporter 6 caractéres.",
+      maxlength: "Le CIN doit comporter 8 caractéres.",
+      minlength: "Le CIN doit comporter 8 caractéres.",
     },
   };
 
@@ -144,7 +144,7 @@ export class UsersManagementComponent implements OnInit {
       diploma: "",
       cin: [
         "",
-        [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
+        [Validators.required, Validators.minLength(8), Validators.maxLength(8)],
       ],
       entryDate: "",
       integrationDate: "",

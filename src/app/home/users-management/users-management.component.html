@@ -170,292 +170,305 @@
         </button>
       </div>
       <fieldset [disabled]="modalType === 'view'">
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <div
-                class="form-group"
-                [ngClass]="{ 'has-danger': formErrors.firstName }"
-              >
-                <label for="firstName">Prénom</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="firstName"
-                  [ngClass]="{ 'has-danger': formErrors.firstName }"
-                  formControlName="firstName"
-                  [(ngModel)]="userCopy.firstName"
-                />
-                <div
-                  class="invalid-feedback d-block"
-                  *ngIf="formErrors.firstName"
-                >
-                  {{ formErrors.firstName }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div
-                class="form-group"
-                [ngClass]="{ 'has-danger': formErrors.lastName }"
-              >
-                <label for="lastName">Nom de famille</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="lastName"
-                  formControlName="lastName"
-                  [(ngModel)]="userCopy.lastName"
-                />
-                <div
-                  class="invalid-feedback d-block"
-                  *ngIf="formErrors.lastName"
-                >
-                  {{ formErrors.lastName }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Sexe</label>
-                <div class="col-sm-4">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input
-                        type="radio"
-                        class="form-check-input"
-                        id="maleRadio"
-                        value="male"
-                        formControlName="gender"
-                        [(ngModel)]="userCopy.gender"
-                      />
-                      Homme
-                      <i class="input-helper"></i>
-                    </label>
-                  </div>
-                </div>
-                <div class="col-sm-5">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input
-                        type="radio"
-                        class="form-check-input"
-                        id="femaleRadio"
-                        value="female"
-                        formControlName="gender"
-                        [(ngModel)]="userCopy.gender"
-                      />
-                      Femme
-                      <i class="input-helper"></i>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="username">Username</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="username"
-                  formControlName="username"
-                  [(ngModel)]="userCopy.username"
-                  readonly
-                />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div
-                class="form-group"
-                [ngClass]="{
-                  'has-danger': formErrors.email || emailAlreadyExists
-                }"
-              >
-                <label for="email">Email</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="email"
-                  [ngClass]="{ 'has-danger': formErrors.email }"
-                  formControlName="email"
-                  [(ngModel)]="userCopy.email"
-                  #email
-                  (input)="checkEmailValue(email.value)"
-                />
-                <div class="invalid-feedback d-block" *ngIf="formErrors.email">
-                  {{ formErrors.email }}
-                </div>
-                <div
-                  class="invalid-feedback d-block"
-                  *ngIf="emailAlreadyExists"
-                >
-                  Cette adresse e-mail est déjà utilisée!
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div
-                class="form-group"
-                [ngClass]="{ 'has-danger': formErrors.mobile }"
-              >
-                <label for="mobile">Numéro de mobile</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="mobile"
-                  formControlName="mobile"
-                  [(ngModel)]="userCopy.mobile"
-                />
-                <div class="invalid-feedback d-block" *ngIf="formErrors.mobile">
-                  {{ formErrors.mobile }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="diploma">Diplôme</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="diploma"
-                  [ngClass]="{ 'has-danger': formErrors.diploma }"
-                  formControlName="diploma"
-                  [(ngModel)]="userCopy.diploma"
-                />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div
-                class="form-group"
-                [ngClass]="{ 'has-danger': formErrors.cin }"
-              >
-                <label for="cin">CIN</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  id="cin"
-                  formControlName="cin"
-                  [(ngModel)]="userCopy.cin"
-                />
-                <div class="invalid-feedback d-block" *ngIf="formErrors.cin">
-                  {{ formErrors.cin }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group d-flex">
-                <label for="entryDate">Date d'entrée</label>
-                <input
-                  type="text"
-                  placeholder="yyyy-mm-dd"
-                  class="form-control form-control-lg"
-                  formControlName="entryDate"
-                  id="entryDate"
-                  [(ngModel)]="userCopy.entryDate"
-                  ngbDatepicker
-                  #ed="ngbDatepicker"
-                  readonly
-                />
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  (click)="ed.toggle()"
-                >
-                  <i class="mdi mdi-calendar"></i>
-                </button>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <div class="form-check">
-                  <label class="form-check-label">
+        <div class="card mx-2">
+          <div class="card-body">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div
+                    class="form-group"
+                    [ngClass]="{ 'has-danger': formErrors.firstName }"
+                  >
+                    <label for="firstName">Prénom</label>
                     <input
-                      type="checkbox"
-                      class="form-check-input"
-                      formControlName="manager"
-                      [(ngModel)]="userCopy.manager"
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="firstName"
+                      [ngClass]="{ 'has-danger': formErrors.firstName }"
+                      formControlName="firstName"
+                      [(ngModel)]="userCopy.firstName"
                     />
-                    Le collaborateur a un rôle de MANAGER ?
-                    <i class="input-helper"></i>
-                  </label>
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="formErrors.firstName"
+                    >
+                      {{ formErrors.firstName }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div
+                    class="form-group"
+                    [ngClass]="{ 'has-danger': formErrors.lastName }"
+                  >
+                    <label for="lastName">Nom de famille</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="lastName"
+                      formControlName="lastName"
+                      [(ngModel)]="userCopy.lastName"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="formErrors.lastName"
+                    >
+                      {{ formErrors.lastName }}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="experience">Années d'expérience</label>
-                <input
-                  type="number"
-                  id="experience"
-                  class="form-control form-control-lg"
-                  formControlName="yearsOfExperience"
-                  [(ngModel)]="userCopy.yearsOfExperience"
-                  placeholder="0"
-                />
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Sexe</label>
+                    <div class="col-sm-4">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input
+                            type="radio"
+                            class="form-check-input"
+                            id="maleRadio"
+                            value="male"
+                            formControlName="gender"
+                            [(ngModel)]="userCopy.gender"
+                          />
+                          Homme
+                          <i class="input-helper"></i>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-sm-5">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input
+                            type="radio"
+                            class="form-check-input"
+                            id="femaleRadio"
+                            value="female"
+                            formControlName="gender"
+                            [(ngModel)]="userCopy.gender"
+                          />
+                          Femme
+                          <i class="input-helper"></i>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="username"
+                      formControlName="username"
+                      [(ngModel)]="userCopy.username"
+                      readonly
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group d-flex">
-                <label for="integrationDate">Date d'integration</label>
-                <input
-                  placeholder="yyyy-mm-dd"
-                  class="form-control form-control-lg"
-                  formControlName="integrationDate"
-                  id="integrationDate"
-                  [(ngModel)]="userCopy.integrationDate"
-                  ngbDatepicker
-                  #id="ngbDatepicker"
-                  readonly
-                />
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  (click)="id.toggle()"
-                >
-                  <i class="mdi mdi-calendar"></i>
-                </button>
+              <div class="row">
+                <div class="col-md-6">
+                  <div
+                    class="form-group"
+                    [ngClass]="{
+                      'has-danger': formErrors.email || emailAlreadyExists
+                    }"
+                  >
+                    <label for="email">Email</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="email"
+                      [ngClass]="{ 'has-danger': formErrors.email }"
+                      formControlName="email"
+                      [(ngModel)]="userCopy.email"
+                      #email
+                      (input)="checkEmailValue(email.value)"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="formErrors.email"
+                    >
+                      {{ formErrors.email }}
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="emailAlreadyExists"
+                    >
+                      Cette adresse e-mail est déjà utilisée!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div
+                    class="form-group"
+                    [ngClass]="{ 'has-danger': formErrors.mobile }"
+                  >
+                    <label for="mobile">Numéro de mobile</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="mobile"
+                      formControlName="mobile"
+                      [(ngModel)]="userCopy.mobile"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="formErrors.mobile"
+                    >
+                      {{ formErrors.mobile }}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group d-flex">
-                <label for="departureDate">Date de départ</label>
-                <input
-                  placeholder="yyyy-mm-dd"
-                  class="form-control form-control-lg"
-                  formControlName="departureDate"
-                  id="departureDate"
-                  [(ngModel)]="userCopy.departureDate"
-                  ngbDatepicker
-                  #dd="ngbDatepicker"
-                  readonly
-                />
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  (click)="dd.toggle()"
-                >
-                  <i class="mdi mdi-calendar"></i>
-                </button>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="diploma">Diplôme</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="diploma"
+                      [ngClass]="{ 'has-danger': formErrors.diploma }"
+                      formControlName="diploma"
+                      [(ngModel)]="userCopy.diploma"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div
+                    class="form-group"
+                    [ngClass]="{ 'has-danger': formErrors.cin }"
+                  >
+                    <label for="cin">CIN</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="cin"
+                      formControlName="cin"
+                      [(ngModel)]="userCopy.cin"
+                    />
+                    <div
+                      class="invalid-feedback d-block"
+                      *ngIf="formErrors.cin"
+                    >
+                      {{ formErrors.cin }}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="col-12">
-              <div class="alert alert-fill-danger" *ngIf="errMsg">
-                {{ errMsg }}
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group d-flex">
+                    <label for="entryDate">Date d'entrée</label>
+                    <input
+                      type="text"
+                      placeholder="yyyy-mm-dd"
+                      class="form-control form-control-lg"
+                      formControlName="entryDate"
+                      id="entryDate"
+                      [(ngModel)]="userCopy.entryDate"
+                      ngbDatepicker
+                      #ed="ngbDatepicker"
+                      readonly
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="ed.toggle()"
+                    >
+                      <i class="mdi mdi-calendar"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          formControlName="manager"
+                          [(ngModel)]="userCopy.manager"
+                        />
+                        Le collaborateur a un rôle de MANAGER ?
+                        <i class="input-helper"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="experience">Années d'expérience</label>
+                    <input
+                      type="number"
+                      id="experience"
+                      class="form-control form-control-lg"
+                      formControlName="yearsOfExperience"
+                      [(ngModel)]="userCopy.yearsOfExperience"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group d-flex">
+                    <label for="integrationDate">Date d'integration</label>
+                    <input
+                      placeholder="yyyy-mm-dd"
+                      class="form-control form-control-lg"
+                      formControlName="integrationDate"
+                      id="integrationDate"
+                      [(ngModel)]="userCopy.integrationDate"
+                      ngbDatepicker
+                      #id="ngbDatepicker"
+                      readonly
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="id.toggle()"
+                    >
+                      <i class="mdi mdi-calendar"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group d-flex">
+                    <label for="departureDate">Date de départ</label>
+                    <input
+                      placeholder="yyyy-mm-dd"
+                      class="form-control form-control-lg"
+                      formControlName="departureDate"
+                      id="departureDate"
+                      [(ngModel)]="userCopy.departureDate"
+                      ngbDatepicker
+                      #dd="ngbDatepicker"
+                      readonly
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="dd.toggle()"
+                    >
+                      <i class="mdi mdi-calendar"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <div class="alert alert-fill-danger" *ngIf="errMsg">
+                    {{ errMsg }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -486,7 +499,7 @@
           data-dismiss="modal"
           (click)="closeModal()"
         >
-          Cancel
+          Annuler
         </button>
       </div>
     </div>

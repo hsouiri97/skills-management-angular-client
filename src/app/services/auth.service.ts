@@ -18,6 +18,10 @@ export class AuthService {
   ) {}
 
   login(username: string, password: string) {
+    this.loadToken();
+    if (this.token !== "") {
+      this.saveToken("");
+    }
     return this.http
       .post(
         "login",

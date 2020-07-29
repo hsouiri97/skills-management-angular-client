@@ -133,11 +133,17 @@ export class DashboardComponent implements OnInit {
 
   trafficChartData = [
     {
-      data: [30, 30, 40],
+      data: [10, 30, 40, 15, 5],
     },
   ];
 
-  trafficChartLabels = ["Search Engines", "Direct Click", "Bookmarks Click"];
+  trafficChartLabels = [
+    "Conseil en stratégie de test",
+    "Tests fonctionnels",
+    "Définition des scénarios des Tests",
+    "Automatisation de Test",
+    "Tests de performance",
+  ];
 
   trafficChartOptions = {
     responsive: true,
@@ -154,11 +160,180 @@ export class DashboardComponent implements OnInit {
         "rgba(177, 148, 250, 1)",
         "rgba(254, 112, 150, 1)",
         "rgba(132, 217, 210, 1)",
+        "rgba(20, 137,241, 208)",
+        "rgba(247, 185, 6, 46)",
       ],
       borderColor: [
         "rgba(177, 148, 250, .2)",
         "rgba(254, 112, 150, .2)",
         "rgba(132, 217, 210, .2)",
+        "rgba(20, 137,241, 208)",
+        "rgba(247, 185, 6, 46)",
+      ],
+    },
+  ];
+  trafficChartData1 = [
+    {
+      data: [30, 30, 40],
+    },
+  ];
+
+  trafficChartLabels1 = [
+    "Helpdesk sur applications d’entreprise",
+    "Gestion des incidents & problèmes",
+    "Gestion des demandes de changements",
+  ];
+
+  trafficChartOptions1 = {
+    responsive: true,
+    animation: {
+      animateScale: true,
+      animateRotate: true,
+    },
+    legend: false,
+  };
+
+  trafficChartColors1 = [
+    {
+      backgroundColor: [
+        "rgba(177, 148, 250, 1)",
+        "rgba(254, 112, 150, 1)",
+        "rgba(132, 217, 210, 1)",
+      ],
+      borderColor: [
+        "rgba(177, 148, 250, .2)",
+        "rgba(254, 112, 150, .2)",
+        "rgba(132, 217, 210, .2)",
+      ],
+    },
+  ];
+  trafficChartData2 = [
+    {
+      data: [30, 30, 40],
+    },
+  ];
+
+  trafficChartLabels2 = [
+    "Helpdesk sur applications d’entreprise",
+    "Gestion des incidents & problèmes",
+    "Gestion des demandes de changements",
+  ];
+
+  trafficChartOptions2 = {
+    responsive: true,
+    animation: {
+      animateScale: true,
+      animateRotate: true,
+    },
+    legend: false,
+  };
+
+  trafficChartColors2 = [
+    {
+      backgroundColor: [
+        "rgba(177, 148, 250, 1)",
+        "rgba(254, 112, 150, 1)",
+        "rgba(132, 217, 210, 1)",
+      ],
+      borderColor: [
+        "rgba(177, 148, 250, .2)",
+        "rgba(254, 112, 150, .2)",
+        "rgba(132, 217, 210, .2)",
+      ],
+    },
+  ];
+  trafficChartData3 = [
+    {
+      data: [20, 30, 40, 10],
+    },
+  ];
+
+  trafficChartLabels3 = [
+    "Conception : infrastructure système et réseau",
+    "Build : Déploiement, gestion de changement des systèmes et réseaux",
+    "Run : Gestion des incidents, configuration, performance management",
+    "Support : Support technique 1-2-3, 24×7",
+  ];
+
+  trafficChartOptions3 = {
+    responsive: true,
+    animation: {
+      animateScale: true,
+      animateRotate: true,
+    },
+    legend: false,
+  };
+
+  trafficChartColors3 = [
+    {
+      backgroundColor: [
+        "rgba(177, 148, 250, 1)",
+        "rgba(254, 112, 150, 1)",
+        "rgba(132, 217, 210, 1)",
+        "rgba(20, 137,241, 208)",
+      ],
+      borderColor: [
+        "rgba(177, 148, 250, .2)",
+        "rgba(254, 112, 150, .2)",
+        "rgba(132, 217, 210, .2)",
+        "rgba(20, 137,241, 208)",
+      ],
+    },
+  ];
+  barChartData = [
+    {
+      data: [200, 250, 50, 100, 75, 25],
+      borderWidth: 1,
+      fill: false,
+    },
+  ];
+
+  barChartLabels = [
+    "2 ans <",
+    "5 ans <",
+    "10 ans <",
+    "15 ans <",
+    "20 ans <",
+    "+20 ans",
+  ];
+
+  barChartOptions = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+    legend: {
+      display: false,
+    },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
+  };
+
+  barChartColors = [
+    {
+      backgroundColor: [
+        "rgba(255, 99, 132, 0.2)",
+        "rgba(54, 162, 235, 0.2)",
+        "rgba(255, 206, 86, 0.2)",
+        "rgba(75, 192, 192, 0.2)",
+        "rgba(153, 102, 255, 0.2)",
+        "rgba(255, 159, 64, 0.2)",
+      ],
+      borderColor: [
+        "rgba(255,99,132,1)",
+        "rgba(54, 162, 235, 1)",
+        "rgba(255, 206, 86, 1)",
+        "rgba(75, 192, 192, 1)",
+        "rgba(153, 102, 255, 1)",
+        "rgba(255, 159, 64, 1)",
       ],
     },
   ];

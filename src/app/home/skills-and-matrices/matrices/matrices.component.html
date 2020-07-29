@@ -264,6 +264,7 @@
           (click)="addNewMatrix()"
           *ngIf="modalType === 'new'"
           [disabled]="matrixForm.invalid"
+          id="create-matrix"
         >
           Ajouter matrice
         </button>
@@ -273,6 +274,7 @@
           (click)="updateMatrix()"
           *ngIf="modalType === 'edit'"
           [disabled]="matrixForm.invalid"
+          id="modify-matrix"
         >
           Modifier matrice
         </button>
@@ -301,7 +303,7 @@
         <strong>Super!</strong>
       </h5>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" id="notif-modal">
       <img src="assets/images/gifs/confirmation.gif" class="img-thumbnail" />
       <h6 class="text-center text-success">
         <strong>{{ notificationMessage }}</strong>
@@ -335,7 +337,12 @@
       <p>êtes-vous sûr de vouloir supprimer la matrice?</p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-success" (click)="deleteMatrix()">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="deleteMatrix()"
+        id="delete-matrix"
+      >
         Valider
       </button>
       <button type="button" class="btn btn-light" (click)="modal.close()">
